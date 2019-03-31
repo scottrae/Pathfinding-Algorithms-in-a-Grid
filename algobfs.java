@@ -11,44 +11,39 @@ public class algobfs{
 	HashSet<node> openset  = new HashSet<node>();
 	HashSet<node> closeset = new HashSet<node>();
 	HashMap<node, node> camefrom = new HashMap<>();
+	
 	Graphics g;
 	int b;
-	
+	public static int counter5;
+	public static int counter6;
 	public algobfs(node start,node end,Graphics g,int b){
 		this.start = start;
 		this.end   = end;
 		this.g     = g;
 		this.b     = b;
-		calculatestartandend();
+		
+		
 		// start();
 	}
 
-	public double finddistance(node a,node b){
-		// double h = Math.pow(Math.pow(a.x-b.x,2)+Math.pow(a.y-b.y,2) ,0.5);
-		double h =Math.abs(a.x-b.x)+Math.abs(a.y-b.y);
-		return h*20;
-	}
+	
 
 
-	public void calculatestartandend(){
-		start.h = finddistance(start,end);
-		start.g = finddistance(start,start);
-		start.f = start.h + start.g;
-		end.h = 0;
-		end.g = 9999;
-		end.f = end.h+end.g;
-	}
 	
 	public void findminneighbor(node a){
 	
 		for(int i=-1;i<=1;i++){
 			for(int j=-1;j<=1;j++){
 				int skip = 0;
-						
-				System.out.println("ppppp");
+				// if(i == 0 && j == 0){
+				// 	continue;
+				// }		
+				
 				node neighbor = new node(a);
 				neighbor.x = a.x + i;
 				neighbor.y = a.y + j;
+
+				
 				if(neighbor.isoutofbound()|| display.arr[neighbor.x][neighbor.y] == 1){
 					continue;
 				}
@@ -59,27 +54,24 @@ public class algobfs{
 						break;
 					}
 				}
-				System.out.println("llllllll");
 				if(skip == 1){
 					continue;
 				}
 				if(i == 0 || j == 0){
-					neighbor.g = a.g + 20;
+					neighbor.g = a.g +20;
 				}else{
-					neighbor.g = a.g + 28;
+					neighbor.g = a.g +20.1;
 				}
-				neighbor.h = finddistance(neighbor,end);
-				neighbor.f = neighbor.g+neighbor.h;
+				
 				it = openset.iterator();
 				node min = null;
 				while(it.hasNext()){
 					node temp = it.next();
 					if(temp.isequal(neighbor)){
-						if(temp.g < neighbor.g){
+						if(temp.g > neighbor.g){
 							min = temp;
 						}
 							skip = 1;
-
 					}
 
 				}
@@ -89,16 +81,12 @@ public class algobfs{
 					openset.add(neighbor);
 				}
 				if(skip == 1){
-
 					continue;
 				}
-
 				camefrom.put(neighbor,a);
 				openset.add(neighbor);
-				System.out.println("dgggggggggg");
-				
+				counter5++;
 				drawbox(neighbor,6);
-				
 			} 
 		}
 		// System.out.println("choosen:"+min.x+" "+min.y+" "+min.f+" "+min.h );
@@ -107,42 +95,34 @@ public class algobfs{
 
 
 	public int bfirst(){
-		
 		boolean path = true;
 		int count = 0;
 		openset.add(start);
 		current = start;
-		System.out.println("dkmsdv");
 
 		while(!openset.isEmpty()){
 
 			if(current.isequal(end)){
 				buildpath(current);
 				path = false;
-				System.out.println("svjknsfv");
-
 				break;
 			}
-			
-			
-		/*	
 			Iterator<node>it = openset.iterator();
 			current = null;
 			while(it.hasNext()){
 				node temp = it.next();
 				if(current == null || current.f > temp.f) {
-					current = temp;}
-					else if(current.f == temp.f && current.g < temp.g){
+					current = temp;
+				}else if(current.f == temp.f && current.g > temp.g){
 					current = temp;
 				}
-			}
-			*/
+			}	
 			openset.remove(current);
 			closeset.add(current);
 
 			findminneighbor(current);
-			System.out.println("sssss");
-			drawbox(current,5);		
+			
+			drawbox(current,5);			
 		}
 		if(path){
 			return 1;//if path not found return 1 so calling function know that pathis not available
@@ -163,7 +143,6 @@ public class algobfs{
 		}
 		display.arr[i][j] = c;
 		return color;
-		
 	}
 
 	public void drawbox(node current,int c){
@@ -196,7 +175,7 @@ public class algobfs{
 	void buildpath(node current){
 		while(camefrom.containsKey(current)){
 			current = camefrom.get(current);
-			  
+			counter6++;
 			drawbox(current,4);
 		}
 		// display.refresh = 1;

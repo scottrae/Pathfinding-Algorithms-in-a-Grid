@@ -7,6 +7,8 @@ public class node{
 	double g;
 	double h;
 	double f;
+	int q;
+	int z;
 
 	node(int x,int y){
 		this.x =x;
@@ -19,6 +21,8 @@ public class node{
 		this.h = a.h;
 		this.g = a.g;
 		this.f = a.f;
+		this.q = a.x +a.y;
+		this.z =a.y - a.x;
 	}
 
 	boolean isequal(node a){
